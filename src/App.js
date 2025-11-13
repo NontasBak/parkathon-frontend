@@ -1,8 +1,13 @@
+import AppRouter from "./router";
+import { ParkingProvider } from "./context/ParkingContext";
+
 function App() {
   return (
-    <div>
-      <h1>Hello World!</h1>
-    </div>
+    <ParkingProvider>
+      <main className="h-screen">
+        <AppRouter />
+      </main>
+    </ParkingProvider>
   );
 }
 
