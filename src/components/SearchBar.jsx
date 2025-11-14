@@ -18,7 +18,6 @@ const SearchBar = ({ onSearch, onMicrophoneClick, onProfileClick }) => {
         <div className="w-full max-w-4xl mx-auto p-4">
             <form onSubmit={handleSubmit} className="relative">
                 <div className="flex items-center bg-white rounded-full shadow-xl border border-gray-200 pl-4 pr-2 py-3">
-                    {/* Search Button */}
                     <button
                         type="submit"
                         className="flex-shrink-0 p-2 text-gray-500 hover:text-gray-700 transition-colors"
@@ -40,7 +39,6 @@ const SearchBar = ({ onSearch, onMicrophoneClick, onProfileClick }) => {
                         </svg>
                     </button>
 
-                    {/* Text Input Field */}
                     <input
                         type="text"
                         value={searchText}
@@ -50,7 +48,6 @@ const SearchBar = ({ onSearch, onMicrophoneClick, onProfileClick }) => {
                     />
 
                     <div className="flex items-center space-x-2 ml-4">
-                        {/* Microphone Button */}
                         <button
                             type="button"
                             onClick={onMicrophoneClick}
@@ -79,26 +76,26 @@ const SearchBar = ({ onSearch, onMicrophoneClick, onProfileClick }) => {
                             </svg>
                         </button>
 
-                        {/* Profile Button */}
                         <button
                             type="button"
                             onClick={onProfileClick}
-                            className="w-10 h-10 bg-gray-300 hover:bg-gray-400 text-gray-600 rounded-full flex items-center justify-center transition-colors shadow-md"
+                            className="w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-md hover:shadow-lg"
+                            style={{
+                                backgroundColor: 'oklch(95.3% 0.051 180.801)',
+                                '--hover-bg': 'oklch(90% 0.051 180.801)'
+                            }}
+                            onMouseEnter={(e) => e.target.style.backgroundColor = 'oklch(90% 0.051 180.801)'}
+                            onMouseLeave={(e) => e.target.style.backgroundColor = 'oklch(95.3% 0.051 180.801)'}
                             aria-label="User profile"
                         >
                             <svg
-                                className="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
+                                className="w-6 h-6"
+                                fill="oklch(77.7% 0.152 181.912)"
+                                viewBox="0 0 32 32"
                                 xmlns="http://www.w3.org/2000/svg"
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                />
+                                <circle cx="16" cy="9" r="7" />
+                                <path d="M16,18 C8.5,18 2,23.5 2,30 C2,31.1 2.9,32 4,32 L28,32 C29.1,32 30,31.1 30,30 C30,23.5 23.5,18 16,18 Z" />
                             </svg>
                         </button>
                     </div>
