@@ -40,11 +40,7 @@ export function ParkingProvider({ children }) {
     clearSearch,
   };
 
-  return (
-    <ParkingContext.Provider value={value}>
-      {children}
-    </ParkingContext.Provider>
-  );
+  return <ParkingContext.Provider value={value}>{children}</ParkingContext.Provider>;
 }
 
 /**

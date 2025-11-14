@@ -8,22 +8,22 @@ export default function HomePage() {
   const { currentLocation, cameraLocation, marker, parkingLocations } = useParkingContext();
 
   const handleSearch = (searchText) => {
-    console.log('Searching for:', searchText);
+    console.log("Searching for:", searchText);
     // TODO: Implement search functionality
   };
 
   const handleMicrophoneClick = () => {
-    console.log('Microphone clicked');
+    console.log("Microphone clicked");
     // TODO: Implement voice search functionality
   };
 
   const handleProfileClick = () => {
-    console.log('Profile clicked');
+    console.log("Profile clicked");
     // TODO: Implement profile navigation
   };
 
   const handleLocationClick = (locationId) => {
-    console.log('Location clicked:', locationId);
+    console.log("Location clicked:", locationId);
     // TODO: Implement location navigation
   };
 
@@ -32,28 +32,26 @@ export default function HomePage() {
       {/* Map component - positioned as background */}
       <div className="absolute inset-0">
         <div className="relative w-full h-screen">
-      <Map
+          <Map
             currentLocation={currentLocation}
             cameraLocation={cameraLocation}
             marker={marker}
             parkingLocations={parkingLocations}
           />
-      </div>
+        </div>
 
-      {/* Search Bar and Frequent Locations positioned above the map with high z-index */}
-      <div className="absolute top-0 left-0 right-0 z-[1000] pointer-events-none">
-        <div className="pointer-events-auto">
-          <SearchBar
-            onSearch={handleSearch}
-            onMicrophoneClick={handleMicrophoneClick}
-            onProfileClick={handleProfileClick}
-          />
-          <FrequentLocationBar
-            onLocationClick={handleLocationClick}
-          />
+        {/* Search Bar and Frequent Locations positioned above the map with high z-index */}
+        <div className="absolute top-0 left-0 right-0 z-[1000] pointer-events-none">
+          <div className="pointer-events-auto">
+            <SearchBar
+              onSearch={handleSearch}
+              onMicrophoneClick={handleMicrophoneClick}
+              onProfileClick={handleProfileClick}
+            />
+            <FrequentLocationBar onLocationClick={handleLocationClick} />
+          </div>
         </div>
       </div>
-    </div>
       <ParkButton />
     </div>
   );
