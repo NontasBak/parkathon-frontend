@@ -37,7 +37,12 @@ function Map({ currentLocation, cameraLocation, marker, parkingLocations }) {
   });
 
   return (
-    <MapContainer center={initialCenter} zoom={13} style={{ width: "100vw", height: "100vh" }}>
+    <MapContainer
+      center={initialCenter}
+      zoom={13}
+      style={{ width: "100%", height: "100%" }}
+      className="absolute inset-0"
+    >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
       <MapUpdater center={markerLocation} />
