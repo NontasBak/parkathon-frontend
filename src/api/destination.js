@@ -9,18 +9,14 @@ import apiClient from "./client";
 export const MOCK_USER_ID = "a1b2c3d4-e5f6-7890-1234-567890abcdef";
 
 /**
- * Generates random coordinates for mock data
+ * Returns mock coordinates for Egnatia 125
  * @returns {Object} Object with latitude and longitude
  */
-const generateRandomCoordinates = () => {
-  // Generate coordinates around Thessaloniki, Greece area
-  // Thessaloniki approximate bounds: lat 40.5-40.7, lon 22.8-23.1
-  const latitude = 40.5 + Math.random() * 0.2; // Random between 40.5 and 40.7
-  const longitude = 22.8 + Math.random() * 0.3; // Random between 22.8 and 23.1
-
+const getMockCoordinates = () => {
+  // Mock coordinates for Egnatia 125, Thessaloniki
   return {
-    latitude: parseFloat(latitude.toFixed(6)),
-    longitude: parseFloat(longitude.toFixed(6)),
+    latitude: 40.63298,
+    longitude: 22.94762,
   };
 };
 
@@ -32,8 +28,8 @@ const generateRandomCoordinates = () => {
  */
 export const setDestination = async (address, coordinates = null) => {
   try {
-    // Use provided coordinates or generate random ones for mock data
-    const destinationCoordinates = coordinates || generateRandomCoordinates();
+    // Always use mock coordinates for Egnatia 125
+    const destinationCoordinates = getMockCoordinates();
 
     const requestBody = {
       address: address,
@@ -57,9 +53,10 @@ export const setDestination = async (address, coordinates = null) => {
  */
 export const setDestinationFromCurrentLocation = async (coordinates) => {
   try {
+    // Always use mock coordinates for Egnatia 125
     const requestBody = {
       address: "Current Location",
-      coordinates: coordinates,
+      coordinates: getMockCoordinates(),
     };
 
     const response = await apiClient.put(`/users/${MOCK_USER_ID}/destination`, requestBody);
@@ -80,9 +77,10 @@ export const setDestinationFromCurrentLocation = async (coordinates) => {
  */
 export const setDestinationFromFrequentLocation = async (address, coordinates) => {
   try {
+    // Always use mock coordinates for Egnatia 125
     const requestBody = {
       address: address,
-      coordinates: coordinates,
+      coordinates: getMockCoordinates(),
     };
 
     const response = await apiClient.put(`/users/${MOCK_USER_ID}/destination`, requestBody);

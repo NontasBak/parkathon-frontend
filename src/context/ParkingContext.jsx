@@ -1,4 +1,5 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import { getParkingSpots } from "../api/parkingSpots";
 
 /**
  * ParkingContext - Shared state for parking search and location data
@@ -17,12 +18,40 @@ export function ParkingProvider({ children }) {
   const [parkingLocations, setParkingLocations] = useState(null);
   const [searchRadius, setSearchRadius] = useState(500); // Default 500m radius
   const [destination, setDestination] = useState(null); // Destination with address and coordinates
+  const [parkingSpots, setParkingSpots] = useState(null); // Parking spots near destination
+  const [loadingSpots, setLoadingSpots] = useState(false); // Loading state for parking spots
+
+  // Fetch parking spots when destination is set
+  useEffect(() => {
+    const fetchParkingSpots = async () => {
+      if (destination && destination.coordinates) {
+        setLoadingSpots(true);
+        try {
+          // Fetch parking spots with default radius of 100m
+          const spots = await getParkingSpots(undefined, 100, false);
+          setParkingSpots(spots);
+          console.log("Fetched parking spots:", spots);
+        } catch (error) {
+          console.error("Failed to fetch parking spots:", error);
+          setParkingSpots(null);
+        } finally {
+          setLoadingSpots(false);
+        }
+      } else {
+        // Clear parking spots if no destination
+        setParkingSpots(null);
+      }
+    };
+
+    fetchParkingSpots();
+  }, [destination]);
 
   // You can add computed values or helper functions here
   const clearSearch = () => {
     setMarker(null);
     setParkingLocations(null);
     setDestination(null);
+    setParkingSpots(null);
   };
 
   const value = {
@@ -33,6 +62,8 @@ export function ParkingProvider({ children }) {
     parkingLocations,
     searchRadius,
     destination,
+    parkingSpots,
+    loadingSpots,
     // Setters
     setCurrentLocation,
     setCameraLocation,
@@ -40,6 +71,7 @@ export function ParkingProvider({ children }) {
     setParkingLocations,
     setSearchRadius,
     setDestination,
+    setParkingSpots,
     // Helper functions
     clearSearch,
   };

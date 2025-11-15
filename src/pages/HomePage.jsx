@@ -7,8 +7,15 @@ import Toast from "../components/Toast";
 import { useParkingContext } from "../context/ParkingContext";
 
 export default function HomePage() {
-  const { currentLocation, cameraLocation, marker, parkingLocations, destination, setDestination } =
-    useParkingContext();
+  const {
+    currentLocation,
+    cameraLocation,
+    marker,
+    parkingLocations,
+    destination,
+    setDestination,
+    parkingSpots,
+  } = useParkingContext();
 
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -59,6 +66,7 @@ export default function HomePage() {
             marker={marker}
             parkingLocations={parkingLocations}
             destination={destination}
+            parkingSpots={parkingSpots}
           />
         </div>
 
