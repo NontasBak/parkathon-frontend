@@ -16,11 +16,13 @@ export function ParkingProvider({ children }) {
   const [marker, setMarker] = useState(null);
   const [parkingLocations, setParkingLocations] = useState(null);
   const [searchRadius, setSearchRadius] = useState(500); // Default 500m radius
+  const [destination, setDestination] = useState(null); // Destination with address and coordinates
 
   // You can add computed values or helper functions here
   const clearSearch = () => {
     setMarker(null);
     setParkingLocations(null);
+    setDestination(null);
   };
 
   const value = {
@@ -30,12 +32,14 @@ export function ParkingProvider({ children }) {
     marker,
     parkingLocations,
     searchRadius,
+    destination,
     // Setters
     setCurrentLocation,
     setCameraLocation,
     setMarker,
     setParkingLocations,
     setSearchRadius,
+    setDestination,
     // Helper functions
     clearSearch,
   };

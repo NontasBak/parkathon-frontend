@@ -22,13 +22,33 @@ function MapUpdater({ center }) {
   return null;
 }
 
-function Map({ currentLocation, cameraLocation, marker, parkingLocations }) {
+function Map({ currentLocation, cameraLocation, marker, parkingLocations, destination }) {
   const initialCenter = { lat: 40.6401, lng: 22.9444 };
   const markerLocation = marker === "parking" ? currentLocation : cameraLocation;
+
+  // Debug logging
+  console.log("Map component - destination prop:", destination);
+
+  // Determine camera center: prioritize destination, then markerLocation, then initial
+  const centerLocation = destination
+    ? { lat: destination.coordinates.latitude, lng: destination.coordinates.longitude }
+    : markerLocation || initialCenter;
+
+  console.log("Map component - centerLocation:", centerLocation);
 
   const parkingIcon = new L.Icon({
     iconUrl:
       "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+    shadowSize: [41, 41],
+  });
+
+  const destinationIcon = new L.Icon({
+    iconUrl:
+      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -45,11 +65,20 @@ function Map({ currentLocation, cameraLocation, marker, parkingLocations }) {
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-      <MapUpdater center={markerLocation} />
+      <MapUpdater center={centerLocation} />
 
       {markerLocation && <Marker position={markerLocation} />}
 
+      {/* Red marker for destination */}
+      {destination && destination.coordinates && (
+        <Marker
+          position={{ lat: destination.coordinates.latitude, lng: destination.coordinates.longitude }}
+          icon={destinationIcon}
+        />
+      )}
+
       {marker === "destination" &&
+        parkingLocations &&
         parkingLocations.map((location, index) => (
           <Marker key={index} position={location} icon={parkingIcon} />
         ))}

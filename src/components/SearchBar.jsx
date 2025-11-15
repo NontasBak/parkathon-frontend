@@ -2,38 +2,42 @@ import React, { useState } from "react";
 import { Search, Mic, UserRound } from "lucide-react";
 import { setDestination } from "../api/destination";
 
-const SearchBar = ({ onSearch, onMicrophoneClick, onProfileClick }) => {
+const SearchBar = ({ onSearch, onMicrophoneClick, onProfileClick, onError }) => {
   const [searchText, setSearchText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!searchText.trim()) {
-      setError("Please enter a destination");
+      if (onError) {
+        onError("Please enter a destination");
+      }
       return;
     }
 
     setIsLoading(true);
-    setError(null);
 
     try {
       // Make PUT request to set destination with mock coordinates
       const response = await setDestination(searchText);
 
       console.log("Destination set successfully:", response);
+      console.log("Destination object:", response.destination);
 
       // Call the onSearch callback if provided
+      // Response structure: { destination: { address, coordinates } }
       if (onSearch) {
-        onSearch(searchText, response);
+        onSearch(searchText, response.destination);
       }
 
       // Clear the search text after successful submission (optional)
       // setSearchText("");
     } catch (err) {
       console.error("Failed to set destination:", err);
-      setError(err.response?.data?.message || "Failed to set destination. Please try again.");
+      if (onError) {
+        onError("Invalid destination");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -98,20 +102,6 @@ const SearchBar = ({ onSearch, onMicrophoneClick, onProfileClick }) => {
           </div>
         </div>
       </form>
-
-      {/* Error Message */}
-      {error && (
-        <div className="mt-2 px-4 py-2 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
-          {error}
-        </div>
-      )}
-
-      {/* Loading indicator (optional visual feedback) */}
-      {isLoading && (
-        <div className="mt-2 px-4 py-2 bg-blue-100 border border-blue-400 text-blue-700 rounded-lg text-sm">
-          Setting destination...
-        </div>
-      )}
     </div>
   );
 };

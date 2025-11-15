@@ -40,9 +40,10 @@ export const setDestination = async (address, coordinates = null) => {
       coordinates: destinationCoordinates,
     };
 
-    const response = await apiClient.put(`/api/users/${MOCK_USER_ID}/destination`, requestBody);
+    const response = await apiClient.put(`/users/${MOCK_USER_ID}/destination`, requestBody);
 
-    return response.data;
+    // API returns { success, message, data: { destination: {...} } }
+    return response.data.data;
   } catch (error) {
     console.error("Error setting destination:", error);
     throw error;
@@ -61,9 +62,10 @@ export const setDestinationFromCurrentLocation = async (coordinates) => {
       coordinates: coordinates,
     };
 
-    const response = await apiClient.put(`/user/${MOCK_USER_ID}/destination`, requestBody);
+    const response = await apiClient.put(`/users/${MOCK_USER_ID}/destination`, requestBody);
 
-    return response.data;
+    // API returns { success, message, data: { destination: {...} } }
+    return response.data.data;
   } catch (error) {
     console.error("Error setting destination from current location:", error);
     throw error;
@@ -83,9 +85,10 @@ export const setDestinationFromFrequentLocation = async (address, coordinates) =
       coordinates: coordinates,
     };
 
-    const response = await apiClient.put(`/user/${MOCK_USER_ID}/destination`, requestBody);
+    const response = await apiClient.put(`/users/${MOCK_USER_ID}/destination`, requestBody);
 
-    return response.data;
+    // API returns { success, message, data: { destination: {...} } }
+    return response.data.data;
   } catch (error) {
     console.error("Error setting destination from frequent location:", error);
     throw error;

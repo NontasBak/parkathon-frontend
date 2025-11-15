@@ -1,15 +1,27 @@
+import { useState } from "react";
 import Map from "../components/Map";
 import ParkButton from "../components/ParkButton";
 import SearchBar from "../components/SearchBar";
 import FrequentLocationBar from "../components/FrequentLocationBar";
+import Toast from "../components/Toast";
 import { useParkingContext } from "../context/ParkingContext";
 
 export default function HomePage() {
-  const { currentLocation, cameraLocation, marker, parkingLocations } = useParkingContext();
+  const { currentLocation, cameraLocation, marker, parkingLocations, destination, setDestination } =
+    useParkingContext();
 
-  const handleSearch = (searchText) => {
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
+
+  const handleSearch = (searchText, destination) => {
     console.log("Searching for:", searchText);
-    // TODO: Implement search functionality
+    console.log("Destination received:", destination);
+
+    // Set destination from API response
+    // destination is already the destination object: { address, coordinates }
+    if (destination) {
+      setDestination(destination);
+    }
   };
 
   const handleMicrophoneClick = () => {
@@ -27,6 +39,15 @@ export default function HomePage() {
     // TODO: Implement location navigation
   };
 
+  const handleSearchError = (errorMessage) => {
+    setToastMessage(errorMessage);
+    setShowToast(true);
+  };
+
+  const handleToastClose = () => {
+    setShowToast(false);
+  };
+
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* Map component - positioned as background */}
@@ -37,6 +58,7 @@ export default function HomePage() {
             cameraLocation={cameraLocation}
             marker={marker}
             parkingLocations={parkingLocations}
+            destination={destination}
           />
         </div>
 
@@ -47,12 +69,22 @@ export default function HomePage() {
               onSearch={handleSearch}
               onMicrophoneClick={handleMicrophoneClick}
               onProfileClick={handleProfileClick}
+              onError={handleSearchError}
             />
             <FrequentLocationBar onLocationClick={handleLocationClick} />
           </div>
         </div>
       </div>
       <ParkButton />
+
+      {/* Toast notification */}
+      <Toast
+        message={toastMessage}
+        isVisible={showToast}
+        onClose={handleToastClose}
+        duration={3000}
+        type="error"
+      />
     </div>
   );
 }
