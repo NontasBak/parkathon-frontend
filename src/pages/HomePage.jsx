@@ -55,6 +55,11 @@ export default function HomePage() {
     setShowToast(false);
   };
 
+  const handleShowToast = (message) => {
+    setToastMessage(message);
+    setShowToast(true);
+  };
+
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* Map component - positioned as background */}
@@ -83,16 +88,10 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      <ParkButton />
+      <ParkButton onShowToast={handleShowToast} />
 
       {/* Toast notification */}
-      <Toast
-        message={toastMessage}
-        isVisible={showToast}
-        onClose={handleToastClose}
-        duration={3000}
-        type="error"
-      />
+      <Toast message={toastMessage} isVisible={showToast} onClose={handleToastClose} duration={3000} />
     </div>
   );
 }
