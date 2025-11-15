@@ -29,11 +29,11 @@ const getMockCoordinates = () => {
 export const setDestination = async (address, coordinates = null) => {
   try {
     // Always use mock coordinates for Egnatia 125
-    const destinationCoordinates = getMockCoordinates();
+    // const destinationCoordinates = getMockCoordinates();
 
     const requestBody = {
       address: address,
-      coordinates: destinationCoordinates,
+      // coordinates: destinationCoordinates,
     };
 
     const response = await apiClient.put(`/users/${MOCK_USER_ID}/destination`, requestBody);
