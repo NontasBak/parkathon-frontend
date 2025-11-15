@@ -2,6 +2,7 @@ import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect } from "react";
 import L from "leaflet";
+import { getParkingSpotIconUrl } from "../api/parkingSpots";
 
 // Fix for default marker icons in Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -22,7 +23,7 @@ function MapUpdater({ center }) {
   return null;
 }
 
-function Map({ currentLocation, cameraLocation, marker, parkingLocations, destination }) {
+function Map({ currentLocation, cameraLocation, marker, parkingLocations, destination, parkingSpots }) {
   const initialCenter = { lat: 40.6401, lng: 22.9444 };
   const markerLocation = marker === "parking" ? currentLocation : cameraLocation;
 
@@ -56,6 +57,18 @@ function Map({ currentLocation, cameraLocation, marker, parkingLocations, destin
     shadowSize: [41, 41],
   });
 
+  // Helper function to create a parking spot icon based on availability
+  const createParkingSpotIcon = (availability) => {
+    return new L.Icon({
+      iconUrl: getParkingSpotIconUrl(availability),
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+      shadowSize: [41, 41],
+    });
+  };
+
   return (
     <MapContainer
       center={initialCenter}
@@ -81,6 +94,16 @@ function Map({ currentLocation, cameraLocation, marker, parkingLocations, destin
         parkingLocations &&
         parkingLocations.map((location, index) => (
           <Marker key={index} position={location} icon={parkingIcon} />
+        ))}
+
+      {/* Parking spots with color-coded markers based on availability */}
+      {parkingSpots &&
+        parkingSpots.map((spot) => (
+          <Marker
+            key={spot.spot_id}
+            position={{ lat: spot.coordinates.latitude, lng: spot.coordinates.longitude }}
+            icon={createParkingSpotIcon(spot.availability)}
+          />
         ))}
     </MapContainer>
   );
