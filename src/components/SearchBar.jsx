@@ -1,13 +1,45 @@
 import React, { useState } from "react";
 import { Search, Mic, UserRound } from "lucide-react";
+import { setDestination } from "../api/destination";
 
-const SearchBar = ({ onSearch, onMicrophoneClick, onProfileClick }) => {
+const SearchBar = ({ onSearch, onMicrophoneClick, onProfileClick, onError }) => {
   const [searchText, setSearchText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (onSearch) {
-      onSearch(searchText);
+
+    if (!searchText.trim()) {
+      if (onError) {
+        onError("Please enter a destination");
+      }
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Make PUT request to set destination with mock coordinates
+      const response = await setDestination(searchText);
+
+      console.log("Destination set successfully:", response);
+      console.log("Destination object:", response.destination);
+
+      // Call the onSearch callback if provided
+      // Response structure: { destination: { address, coordinates } }
+      if (onSearch) {
+        onSearch(searchText, response.destination);
+      }
+
+      // Clear the search text after successful submission (optional)
+      // setSearchText("");
+    } catch (err) {
+      console.error("Failed to set destination:", err);
+      if (onError) {
+        onError("Invalid destination");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -21,18 +53,20 @@ const SearchBar = ({ onSearch, onMicrophoneClick, onProfileClick }) => {
         <div className="flex items-center bg-white rounded-full shadow-xl border border-gray-200 pl-4 pr-2 py-3">
           <button
             type="submit"
-            className="flex-shrink-0 p-2 text-gray-500 hover:text-gray-700 transition-colors"
+            disabled={isLoading}
+            className="flex-shrink-0 p-2 text-gray-500 hover:text-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Search"
           >
-            <Search className="w-5 h-5" />
+            <Search className={`w-5 h-5 ${isLoading ? "animate-pulse" : ""}`} />
           </button>
 
           <input
             type="text"
             value={searchText}
             onChange={handleInputChange}
-            placeholder="Search Parkathon"
-            className="flex-1 px-4 py-2 text-gray-700 bg-transparent border-none outline-none placeholder-gray-400"
+            placeholder="Enter destination (e.g., Egnatia 125)"
+            disabled={isLoading}
+            className="flex-1 px-4 py-2 text-gray-700 bg-transparent border-none outline-none placeholder-gray-400 disabled:opacity-50"
           />
 
           <div className="flex items-center space-x-2 ml-4">
