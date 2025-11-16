@@ -12,6 +12,7 @@ export const getParkingLocations = async (userId, active = true) => {
       params: { active },
     });
     // API returns { success, message, data } structure
+    console.log(response.data?.data);
     return response.data?.data || response.data;
   } catch (error) {
     console.error("Error fetching parking locations:", error);
@@ -33,7 +34,9 @@ export const getParkingLocations = async (userId, active = true) => {
 export const addParkingLocation = async (userId, parkingData) => {
   try {
     const response = await apiClient.post(`/users/${userId}/parking-locations`, {
-      car_id: parkingData.car_id,
+      car_summary: {
+        car_id: parkingData.car_id,
+      },
       user_id: userId,
       coordinates: parkingData.coordinates,
       address: parkingData.address,

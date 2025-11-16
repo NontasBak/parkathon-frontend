@@ -45,12 +45,18 @@ export default function ParkButton({ onShowToast }) {
         getParkingLocations(userId, false),
       ]);
 
-      // Combine and sort by timestamp (newest first)
-      const allLocations = [
-        ...(Array.isArray(activeLocations) ? activeLocations : []),
-        ...(Array.isArray(pastLocations) ? pastLocations : []),
-      ];
-      allLocations.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      // Sort active locations by timestamp (newest first)
+      const sortedActive = (Array.isArray(activeLocations) ? activeLocations : []).sort(
+        (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
+      );
+
+      // Sort inactive locations by timestamp (newest first)
+      const sortedInactive = (Array.isArray(pastLocations) ? pastLocations : []).sort(
+        (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
+      );
+
+      // Combine with active locations first, then inactive
+      const allLocations = [...sortedActive, ...sortedInactive];
 
       setParkingLocations(allLocations);
     } catch (error) {
@@ -215,7 +221,7 @@ export default function ParkButton({ onShowToast }) {
                         }`}
                       >
                         <Car className="w-4 h-4" />
-                        <span>{location.car?.label || `Car ${location.car?.car_id?.slice(0, 8)}`}</span>
+                        <span>{location.car_summary?.label || `Car ${location.car_summary?.label}`}</span>
                         <span className="mx-1">|</span>
                         <span>{formatDate(location.timestamp)}</span>
                       </div>
