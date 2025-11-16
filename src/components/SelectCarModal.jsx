@@ -1,4 +1,4 @@
-import { X, Car } from "lucide-react";
+import { X, Car, Plus } from "lucide-react";
 
 /**
  * SelectCarModal component - Modal for selecting a car when parking
@@ -32,10 +32,7 @@ export default function SelectCarModal({
       {/* Modal */}
       <div className="relative bg-white rounded-2xl shadow-xl p-6 mx-4 max-w-sm w-full">
         {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 left-4 text-gray-500 hover:text-gray-700"
-        >
+        <button onClick={onClose} className="absolute top-4 left-4 text-gray-500 hover:text-gray-700">
           <X className="w-6 h-6" />
         </button>
 
@@ -43,40 +40,43 @@ export default function SelectCarModal({
         <h2 className="text-center text-xl font-semibold mb-6 text-gray-800">Select car</h2>
 
         {/* Car selection grid */}
-        <div className="flex justify-center gap-4 mb-6">
-          {cars.map((car, index) => (
+        <div className="flex justify-center gap-6 mb-6">
+          {cars.map((car) => (
             <button
               key={car.car_id}
               onClick={() => onCarSelect(car.car_id)}
-              className={`flex flex-col items-center justify-center w-20 h-20 rounded-full border-2 transition-all ${
-                selectedCarId === car.car_id
-                  ? "border-[#1B4965] bg-[#1B4965] bg-opacity-10"
-                  : "border-gray-300 hover:border-gray-400"
-              }`}
+              className="flex flex-col items-center gap-2 transition-all"
             >
-              <Car
-                className={`w-8 h-8 mb-1 ${
-                  selectedCarId === car.car_id ? "text-[#1B4965]" : "text-gray-600"
+              <div
+                className={`w-16 h-16 rounded-full border-2 flex items-center justify-center transition-all ${
+                  selectedCarId === car.car_id
+                    ? "border-[#1B4965] bg-[#1B4965] bg-opacity-10"
+                    : "border-gray-300 hover:border-gray-400"
                 }`}
-              />
+              >
+                <Car
+                  className={`w-7 h-7 ${selectedCarId === car.car_id ? "text-[#1B4965]" : "text-gray-600"}`}
+                />
+              </div>
               <span
-                className={`text-xs font-medium ${
+                className={`text-xs font-medium max-w-[70px] break-words text-center ${
                   selectedCarId === car.car_id ? "text-[#1B4965]" : "text-gray-600"
                 }`}
               >
-                Car {index + 1}
+                {car.label}
               </span>
             </button>
           ))}
 
           {/* Add car button */}
           {showAddCarButton && (
-            <button
-              onClick={onAddCar}
-              className="flex flex-col items-center justify-center w-20 h-20 rounded-full border-2 border-dashed border-gray-300 hover:border-gray-400 transition-all"
-            >
-              <div className="text-3xl text-gray-400 mb-1">+</div>
-              <span className="text-xs font-medium text-gray-600">Add car</span>
+            <button onClick={onAddCar} className="flex flex-col items-center gap-2 transition-all">
+              <div className="w-16 h-16 rounded-full border-2 border-dashed border-gray-300 hover:border-gray-400 flex items-center justify-center transition-all">
+                <Plus className="w-7 h-7 text-gray-400" />
+              </div>
+              <span className="text-xs font-medium text-gray-600 max-w-[70px] break-words text-center">
+                Add car
+              </span>
             </button>
           )}
         </div>
