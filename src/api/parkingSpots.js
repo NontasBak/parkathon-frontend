@@ -22,7 +22,7 @@ export const getParkingSpots = async (userId = MOCK_USER_ID, radius = 10000, acc
       accessibility,
     };
 
-    const response = await apiClient.get(`/users/${userId}/destination/parking-spots`, { params });
+    const response = await apiClient.get(`/user/${userId}/destination/parking-spot`, { params });
 
     // API returns { success, message, data: [] }
     // Extract the data array which contains parking spots

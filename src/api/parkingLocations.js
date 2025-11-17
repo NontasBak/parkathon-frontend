@@ -8,7 +8,7 @@ import apiClient from "./client";
  */
 export const getParkingLocations = async (userId, active = true) => {
   try {
-    const response = await apiClient.get(`/users/${userId}/parking-locations`, {
+    const response = await apiClient.get(`/user/${userId}/parking-location`, {
       params: { active },
     });
     // API returns { success, message, data } structure
@@ -33,7 +33,7 @@ export const getParkingLocations = async (userId, active = true) => {
  */
 export const addParkingLocation = async (userId, parkingData) => {
   try {
-    const response = await apiClient.post(`/users/${userId}/parking-locations`, {
+    const response = await apiClient.post(`/user/${userId}/parking-location`, {
       car_summary: {
         car_id: parkingData.car_id,
       },
@@ -57,7 +57,7 @@ export const addParkingLocation = async (userId, parkingData) => {
  */
 export const removeParkingLocation = async (userId, parkingId) => {
   try {
-    const response = await apiClient.put(`/users/${userId}/parking-locations/${parkingId}`);
+    const response = await apiClient.put(`/user/${userId}/parking-location/${parkingId}`);
     // API returns { success, message, data } structure
     return response.data?.data || response.data;
   } catch (error) {

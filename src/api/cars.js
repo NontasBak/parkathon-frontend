@@ -7,7 +7,7 @@ import apiClient from "./client";
  */
 export const getCars = async (userId) => {
   try {
-    const response = await apiClient.get(`/users/${userId}/cars`);
+    const response = await apiClient.get(`/user/${userId}/car`);
     // API returns { success, message, data } structure
     return response.data?.data || response.data;
   } catch (error) {
@@ -25,7 +25,7 @@ export const getCars = async (userId) => {
  */
 export const addCar = async (userId, carData) => {
   try {
-    const response = await apiClient.post(`/users/${userId}/cars`, {
+    const response = await apiClient.post(`/user/${userId}/car`, {
       user_id: userId,
       label: carData.label,
     });
