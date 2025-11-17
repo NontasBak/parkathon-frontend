@@ -4,13 +4,17 @@ import { addCar, editCar, deleteCar } from "../api/cars";
 import Toast from "./Toast";
 import AddCarPopUp from "./AddCarPopUp";
 
-export default function CarsDropdown({ isOpen, onToggle, userId, cars, onCarsUpdated }) {
-    const [showAddModal, setShowAddModal] = useState(false);
+export default function CarsDropdown({ isOpen, onToggle, userId, cars, onCarsUpdated, showAddModal, setShowAddModal }) {
+    const [localShowAddModal, setLocalShowAddModal] = useState(false);
     const [editingCarId, setEditingCarId] = useState(null);
     const [carLabel, setCarLabel] = useState("");
     const [toastMessage, setToastMessage] = useState("");
     const [toastVisible, setToastVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    // Use either the prop or local state (for backward compatibility)
+    const actualShowAddModal = showAddModal !== undefined ? showAddModal : localShowAddModal;
+    const setActualShowAddModal = setShowAddModal || setLocalShowAddModal;
 
     const handleAddCar = async () => {
         if (!carLabel.trim()) {
@@ -25,7 +29,7 @@ export default function CarsDropdown({ isOpen, onToggle, userId, cars, onCarsUpd
             setToastMessage("Cars Updated");
             setToastVisible(true);
             setCarLabel("");
-            setShowAddModal(false);
+            setActualShowAddModal(false);
             onCarsUpdated(); // Refresh the cars list
         } catch (err) {
             console.error("Error adding car:", err);
@@ -51,7 +55,7 @@ export default function CarsDropdown({ isOpen, onToggle, userId, cars, onCarsUpd
             setToastVisible(true);
             setCarLabel("");
             setEditingCarId(null);
-            setShowAddModal(false);
+            setActualShowAddModal(false);
             onCarsUpdated(); // Refresh the cars list
         } catch (err) {
             console.error("Error editing car:", err);
@@ -118,7 +122,7 @@ export default function CarsDropdown({ isOpen, onToggle, userId, cars, onCarsUpd
                     <div>
                         <button
                             onClick={() => {
-                                setShowAddModal(true);
+                                setActualShowAddModal(true);
                                 setCarLabel("");
                             }}
                             disabled={cars && cars.length >= 3}
@@ -160,7 +164,7 @@ export default function CarsDropdown({ isOpen, onToggle, userId, cars, onCarsUpd
                                             onClick={() => {
                                                 setEditingCarId(car._id || car.car_id);
                                                 setCarLabel(car.label);
-                                                setShowAddModal(true);
+                                                setActualShowAddModal(true);
                                             }}
                                             className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:shadow-md"
                                             style={{ backgroundColor: "oklch(60.9% 0.126 221.723)" }}
@@ -196,9 +200,9 @@ export default function CarsDropdown({ isOpen, onToggle, userId, cars, onCarsUpd
 
             {/* Add Car PopUp Modal */}
             <AddCarPopUp
-                isOpen={showAddModal}
+                isOpen={actualShowAddModal}
                 onClose={() => {
-                    setShowAddModal(false);
+                    setActualShowAddModal(false);
                     setCarLabel("");
                     setEditingCarId(null);
                 }}

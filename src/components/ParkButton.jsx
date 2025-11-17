@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { CircleParking, ChevronUp, ChevronDown, MapPin, Car, CircleParkingOff } from "lucide-react";
+import { useNavigate } from "react-router";
 import SelectCarModal from "./SelectCarModal";
 import { getCars } from "../api/cars";
 import { getParkingLocations, addParkingLocation, removeParkingLocation } from "../api/parkingLocations";
 
 export default function ParkButton({ onShowToast }) {
+  const navigate = useNavigate();
   const [showCarModal, setShowCarModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [cars, setCars] = useState([]);
@@ -192,23 +194,20 @@ export default function ParkButton({ onShowToast }) {
               {parkingLocations.map((location) => (
                 <div
                   key={location.parking_id}
-                  className={`px-4 py-3 hover:bg-gray-50 transition-colors ${
-                    location.active ? "bg-blue-50 bg-opacity-30" : ""
-                  }`}
+                  className={`px-4 py-3 hover:bg-gray-50 transition-colors ${location.active ? "bg-blue-50 bg-opacity-30" : ""
+                    }`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
                       {/* First row: Address with map pin icon */}
                       <div className="flex items-start gap-2 mb-2">
                         <MapPin
-                          className={`w-5 h-5 flex-shrink-0 ${
-                            location.active ? "text-gray-500" : "text-gray-400"
-                          }`}
+                          className={`w-5 h-5 flex-shrink-0 ${location.active ? "text-gray-500" : "text-gray-400"
+                            }`}
                         />
                         <p
-                          className={`text-sm font-medium truncate ${
-                            location.active ? "text-gray-800" : "text-gray-500"
-                          }`}
+                          className={`text-sm font-medium truncate ${location.active ? "text-gray-800" : "text-gray-500"
+                            }`}
                         >
                           {location.address}
                         </p>
@@ -216,9 +215,8 @@ export default function ParkButton({ onShowToast }) {
 
                       {/* Second row: Car details */}
                       <div
-                        className={`flex items-center gap-2 text-xs ${
-                          location.active ? "text-gray-500" : "text-gray-400"
-                        }`}
+                        className={`flex items-center gap-2 text-xs ${location.active ? "text-gray-500" : "text-gray-400"
+                          }`}
                       >
                         <Car className="w-4 h-4" />
                         <span>{location.car_summary?.label || `Car ${location.car_summary?.label}`}</span>
@@ -248,9 +246,8 @@ export default function ParkButton({ onShowToast }) {
           <div className="py-4 relative flex justify-center w-full">
             {/* Park Button */}
             <button
-              className={`bg-[#1B4965] hover:bg-[#234a61] text-white font-semibold py-1 px-24 rounded-lg flex items-center justify-center gap-2 transition-colors ${
-                loading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`bg-[#1B4965] hover:bg-[#234a61] text-white font-semibold py-1 px-24 rounded-lg flex items-center justify-center gap-2 transition-colors ${loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               onClick={handleParkClick}
               disabled={loading}
             >
@@ -270,6 +267,7 @@ export default function ParkButton({ onShowToast }) {
         selectedCarId={selectedCarId}
         onCarSelect={handleCarSelect}
         onAddCar={handleAddCar}
+        navigate={navigate}
       />
     </>
   );

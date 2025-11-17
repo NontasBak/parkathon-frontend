@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { UserRound, ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import ProfileSectionDropdown from "../components/DropdownLists";
 import CarsDropdown from "../components/CarsDropdown";
 import { getUser } from "../api/user";
@@ -9,7 +9,9 @@ import Toast from "../components/Toast";
 
 export default function UserProfile() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [expandedSection, setExpandedSection] = useState(null);
+    const [showAddModal, setShowAddModal] = useState(false);
     const [user, setUser] = useState(null);
     const [cars, setCars] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -51,6 +53,16 @@ export default function UserProfile() {
     useEffect(() => {
         fetchCars();
     }, []);
+
+    // Handle navigation state to open add car modal
+    useEffect(() => {
+        if (location.state?.openAddCar) {
+            setExpandedSection("cars");
+            setShowAddModal(true);
+            // Clear the state so it doesn't trigger again on page refresh
+            window.history.replaceState({}, document.title);
+        }
+    }, [location]);
 
     const handleBack = () => {
         navigate(-1);
@@ -118,6 +130,8 @@ export default function UserProfile() {
                     userId={userId}
                     cars={cars}
                     onCarsUpdated={fetchCars}
+                    showAddModal={showAddModal}
+                    setShowAddModal={setShowAddModal}
                 />
 
                 <ProfileSectionDropdown
