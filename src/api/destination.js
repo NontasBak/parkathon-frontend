@@ -36,7 +36,7 @@ export const setDestination = async (address, coordinates = null) => {
       // coordinates: destinationCoordinates,
     };
 
-    const response = await apiClient.put(`/users/${MOCK_USER_ID}/destination`, requestBody);
+    const response = await apiClient.put(`/user/${MOCK_USER_ID}/destination`, requestBody);
 
     // API returns { success, message, data: { destination: {...} } }
     return response.data.data;
@@ -59,7 +59,7 @@ export const setDestinationFromCurrentLocation = async (coordinates) => {
       coordinates: getMockCoordinates(),
     };
 
-    const response = await apiClient.put(`/users/${MOCK_USER_ID}/destination`, requestBody);
+    const response = await apiClient.put(`/user/${MOCK_USER_ID}/destination`, requestBody);
 
     // API returns { success, message, data: { destination: {...} } }
     return response.data.data;
@@ -83,7 +83,7 @@ export const setDestinationFromFrequentLocation = async (address, coordinates) =
       coordinates: getMockCoordinates(),
     };
 
-    const response = await apiClient.put(`/users/${MOCK_USER_ID}/destination`, requestBody);
+    const response = await apiClient.put(`/user/${MOCK_USER_ID}/destination`, requestBody);
 
     // API returns { success, message, data: { destination: {...} } }
     return response.data.data;
