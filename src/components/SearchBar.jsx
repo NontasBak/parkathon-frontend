@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Search, Mic, UserRound } from "lucide-react";
+import { useNavigate } from "react-router";
 import { setDestination } from "../api/destination";
 
 const SearchBar = ({ onSearch, onMicrophoneClick, onProfileClick, onError }) => {
   const [searchText, setSearchText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,6 +49,10 @@ const SearchBar = ({ onSearch, onMicrophoneClick, onProfileClick, onError }) => 
     setSearchText(e.target.value);
   };
 
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto p-4">
       <form onSubmit={handleSubmit} className="relative">
@@ -87,7 +93,7 @@ const SearchBar = ({ onSearch, onMicrophoneClick, onProfileClick, onError }) => 
 
             <button
               type="button"
-              onClick={onProfileClick}
+              onClick={handleProfileClick}
               className="w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-md hover:shadow-lg"
               style={{
                 backgroundColor: "oklch(95.3% 0.051 180.801)",
