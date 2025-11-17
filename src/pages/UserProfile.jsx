@@ -1,11 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserRound, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router";
 import DropdownLists from "../components/DropdownLists";
+import { getUser } from "../api/user";
+import Toast from "../components/Toast";
 
 export default function UserProfile() {
     const navigate = useNavigate();
     const [expandedSection, setExpandedSection] = useState(null);
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [toastMessage, setToastMessage] = useState("");
+    const [toastType, setToastType] = useState("success");
+
+    // Fetch user data on component mount
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                setLoading(true);
+                // Use the same mock user ID as other components
+                const userId = "a1b2c3d4-e5f6-7890-1234-567890abcdef";
+                const userData = await getUser(userId);
+                setUser(userData);
+                setToastType("success");
+            } catch (err) {
+                console.error("Failed to fetch user data:", err);
+                setToastMessage("Failed to load user profile");
+                setToastType("error");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserData();
+    }, []);
 
     const handleBack = () => {
         navigate(-1);
@@ -17,6 +45,14 @@ export default function UserProfile() {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+            {toastMessage && (
+                <Toast
+                    message={toastMessage}
+                    onClose={() => setToastMessage("")}
+                    type={toastType}
+                />
+            )}
+
             {/* Back Button */}
             <div className="pt-4 pl-4">
                 <button
@@ -40,7 +76,7 @@ export default function UserProfile() {
                     <UserRound className="w-16 h-16" style={{ color: "oklch(77.7% 0.152 181.912)" }} />
                 </div>
                 <h2 className="text-2xl font-semibold" style={{ color: "oklch(39.1% 0.09 240.876)" }}>
-                    Maria Charisi
+                    {loading ? "Loading..." : user?.name || "User"}
                 </h2>
             </div>
 
