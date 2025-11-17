@@ -36,3 +36,41 @@ export const addCar = async (userId, carData) => {
     throw error;
   }
 };
+
+/**
+ * Edit a car for a user
+ * @param {string} userId - The UUID of the user
+ * @param {string} carId - The UUID of the car
+ * @param {Object} carData - The car data to update
+ * @param {string} carData.label - The new label/name for the car
+ * @returns {Promise<Object>} Updated car object
+ */
+export const editCar = async (userId, carId, carData) => {
+  try {
+    const response = await apiClient.put(`/user/${userId}/car/${carId}`, {
+      label: carData.label,
+    });
+    // API returns { success, message, data } structure
+    return response.data?.data || response.data;
+  } catch (error) {
+    console.error("Error editing car:", error);
+    throw error;
+  }
+};
+
+/**
+ * Delete a car for a user
+ * @param {string} userId - The UUID of the user
+ * @param {string} carId - The UUID of the car to delete
+ * @returns {Promise<Object>} Response object
+ */
+export const deleteCar = async (userId, carId) => {
+  try {
+    const response = await apiClient.delete(`/user/${userId}/car/${carId}`);
+    // API returns { success, message, data } structure
+    return response.data?.data || response.data;
+  } catch (error) {
+    console.error("Error deleting car:", error);
+    throw error;
+  }
+};

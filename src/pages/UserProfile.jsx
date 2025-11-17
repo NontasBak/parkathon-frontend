@@ -1,25 +1,27 @@
 import { useState, useEffect } from "react";
 import { UserRound, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router";
-import DropdownLists from "../components/DropdownLists";
+import ProfileSectionDropdown from "../components/DropdownLists";
+import CarsDropdown from "../components/CarsDropdown";
 import { getUser } from "../api/user";
+import { getCars } from "../api/cars";
 import Toast from "../components/Toast";
 
 export default function UserProfile() {
     const navigate = useNavigate();
     const [expandedSection, setExpandedSection] = useState(null);
     const [user, setUser] = useState(null);
+    const [cars, setCars] = useState([]);
     const [loading, setLoading] = useState(true);
     const [toastMessage, setToastMessage] = useState("");
     const [toastType, setToastType] = useState("success");
 
-    // Fetch user data on component mount
+    const userId = "a1b2c3d4-e5f6-7890-1234-567890abcdef";
+
     useEffect(() => {
         const fetchUserData = async () => {
             try {
                 setLoading(true);
-                // Use the same mock user ID as other components
-                const userId = "a1b2c3d4-e5f6-7890-1234-567890abcdef";
                 const userData = await getUser(userId);
                 setUser(userData);
                 setToastType("success");
@@ -35,12 +37,32 @@ export default function UserProfile() {
         fetchUserData();
     }, []);
 
+    const fetchCars = async () => {
+        try {
+            const carsData = await getCars(userId);
+            setCars(carsData || []);
+        } catch (err) {
+            console.error("Failed to fetch cars:", err);
+            setToastMessage("Failed to load cars");
+            setToastType("error");
+        }
+    };
+
+    useEffect(() => {
+        fetchCars();
+    }, []);
+
     const handleBack = () => {
         navigate(-1);
     };
 
     const toggleSection = (section) => {
         setExpandedSection(expandedSection === section ? null : section);
+    };
+
+    const handleLogout = () => {
+        setToastMessage("Logout functionality coming soon");
+        setToastType("info");
     };
 
     return (
@@ -80,47 +102,44 @@ export default function UserProfile() {
                 </h2>
             </div>
 
-            {/* Content */}
+            {/* Profile Sections */}
             <div className="max-w-2xl mx-auto px-4 py-2 space-y-3">
-                {/* Frequent Locations Section */}
-                <DropdownLists
+                <ProfileSectionDropdown
                     title="Frequent Locations"
                     isOpen={expandedSection === "locations"}
                     onToggle={() => toggleSection("locations")}
                 >
                     <p className="text-sm text-gray-600">Frequent locations functionality coming soon.</p>
-                </DropdownLists>
+                </ProfileSectionDropdown>
 
-                {/* Cars Section */}
-                <DropdownLists
-                    title="Cars"
+                <CarsDropdown
                     isOpen={expandedSection === "cars"}
                     onToggle={() => toggleSection("cars")}
-                >
-                    <p className="text-sm text-gray-600">Cars functionality coming soon.</p>
-                </DropdownLists>
+                    userId={userId}
+                    cars={cars}
+                    onCarsUpdated={fetchCars}
+                />
 
-                {/* Security Settings Section */}
-                <DropdownLists
+                <ProfileSectionDropdown
                     title="Security Settings"
                     isOpen={expandedSection === "security"}
                     onToggle={() => toggleSection("security")}
                 >
                     <p className="text-sm text-gray-600">Security settings functionality coming soon.</p>
-                </DropdownLists>
+                </ProfileSectionDropdown>
 
-                {/* Accessibility Section */}
-                <DropdownLists
+                <ProfileSectionDropdown
                     title="Accessibility"
                     isOpen={expandedSection === "accessibility"}
                     onToggle={() => toggleSection("accessibility")}
                 >
                     <p className="text-sm text-gray-600">Accessibility functionality coming soon.</p>
-                </DropdownLists>
+                </ProfileSectionDropdown>
 
                 {/* Log Out Button */}
                 <div className="flex justify-center pt-4">
                     <button
+                        onClick={handleLogout}
                         className="px-6 py-2 rounded-xl text-white font-semibold transition-opacity hover:opacity-80"
                         style={{ backgroundColor: "oklch(39.1% 0.09 240.876)" }}
                     >
