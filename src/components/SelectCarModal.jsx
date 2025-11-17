@@ -9,6 +9,7 @@ import { X, Car, Plus } from "lucide-react";
  * @param {string} selectedCarId - Currently selected car ID
  * @param {function} onCarSelect - Callback when a car is selected
  * @param {function} onAddCar - Callback when "Add car" button is clicked
+ * @param {function} navigate - React Router navigate function
  */
 export default function SelectCarModal({
   isOpen,
@@ -18,6 +19,7 @@ export default function SelectCarModal({
   selectedCarId,
   onCarSelect,
   onAddCar,
+  navigate,
 }) {
   if (!isOpen) return null;
 
@@ -48,20 +50,18 @@ export default function SelectCarModal({
               className="flex flex-col items-center gap-2 transition-all"
             >
               <div
-                className={`w-16 h-16 rounded-full border-2 flex items-center justify-center transition-all ${
-                  selectedCarId === car.car_id
-                    ? "border-[#1B4965] bg-[#1B4965] bg-opacity-10"
-                    : "border-gray-300 hover:border-gray-400"
-                }`}
+                className={`w-16 h-16 rounded-full border-2 flex items-center justify-center transition-all ${selectedCarId === car.car_id
+                  ? "border-[#1B4965] bg-[#1B4965] bg-opacity-10"
+                  : "border-gray-300 hover:border-gray-400"
+                  }`}
               >
                 <Car
                   className={`w-7 h-7 ${selectedCarId === car.car_id ? "text-[#1B4965]" : "text-gray-600"}`}
                 />
               </div>
               <span
-                className={`text-xs font-medium max-w-[70px] break-words text-center ${
-                  selectedCarId === car.car_id ? "text-[#1B4965]" : "text-gray-600"
-                }`}
+                className={`text-xs font-medium max-w-[70px] break-words text-center ${selectedCarId === car.car_id ? "text-[#1B4965]" : "text-gray-600"
+                  }`}
               >
                 {car.label}
               </span>
@@ -70,7 +70,15 @@ export default function SelectCarModal({
 
           {/* Add car button */}
           {showAddCarButton && (
-            <button onClick={onAddCar} className="flex flex-col items-center gap-2 transition-all">
+            <button
+              onClick={() => {
+                onClose(); // Close the car selection modal
+                if (navigate) {
+                  navigate("/profile", { state: { openAddCar: true } }); // Navigate to profile page with state
+                }
+              }}
+              className="flex flex-col items-center gap-2 transition-all"
+            >
               <div className="w-16 h-16 rounded-full border-2 border-dashed border-gray-300 hover:border-gray-400 flex items-center justify-center transition-all">
                 <Plus className="w-7 h-7 text-gray-400" />
               </div>
@@ -85,11 +93,10 @@ export default function SelectCarModal({
         <button
           onClick={onConfirm}
           disabled={!selectedCarId}
-          className={`w-full py-3 rounded-lg font-semibold transition-colors ${
-            selectedCarId
-              ? "bg-[#1B4965] hover:bg-[#234a61] text-white"
-              : "bg-gray-200 text-gray-400 cursor-not-allowed"
-          }`}
+          className={`w-full py-3 rounded-lg font-semibold transition-colors ${selectedCarId
+            ? "bg-[#1B4965] hover:bg-[#234a61] text-white"
+            : "bg-gray-200 text-gray-400 cursor-not-allowed"
+            }`}
         >
           Confirm
         </button>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import Map from "../components/Map";
 import ParkButton from "../components/ParkButton";
 import SearchBar from "../components/SearchBar";
@@ -7,6 +8,7 @@ import Toast from "../components/Toast";
 import { useParkingContext } from "../context/ParkingContext";
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const {
     currentLocation,
     cameraLocation,
@@ -37,8 +39,7 @@ export default function HomePage() {
   };
 
   const handleProfileClick = () => {
-    console.log("Profile clicked");
-    // TODO: Implement profile navigation
+    navigate("/profile");
   };
 
   const handleLocationClick = (locationId) => {
