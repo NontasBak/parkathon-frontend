@@ -46,10 +46,33 @@ export default function HomePage() {
   const handleLocationClick = async (location) => {
     console.log("Location clicked:", location);
 
-    // If it's the "nearby" location, handle differently
+    // If it's the "nearby" location, set destination with coordinates only
     if (location.id === "nearby") {
-      // TODO: Implement nearby search functionality
-      console.log("Searching for nearby parking");
+      try {
+        console.log("Searching for nearby parking");
+
+        // Mock coordinates for Egnatia 125, Thessaloniki
+        const mockCoordinates = {
+          latitude: 40.63298,
+          longitude: 22.94762,
+        };
+
+        // Call the API with coordinates only (no address)
+        const response = await setDestinationAPI(null, mockCoordinates);
+
+        console.log("Nearby destination set via API:", response);
+
+        // Update local state with the destination from API response
+        if (response && response.destination) {
+          setDestination(response.destination);
+          setToastMessage("Displaying nearby parking spots");
+          setShowToast(true);
+        }
+      } catch (err) {
+        console.error("Failed to set nearby destination:", err);
+        setToastMessage("Failed to search nearby");
+        setShowToast(true);
+      }
       return;
     }
 

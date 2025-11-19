@@ -28,9 +28,12 @@ const getMockCoordinates = () => {
  */
 export const setDestination = async (address, coordinates = null) => {
   try {
-    const requestBody = {
-      address: address,
-    };
+    const requestBody = {};
+
+    // Add address if provided
+    if (address) {
+      requestBody.address = address;
+    }
 
     // Add coordinates if provided
     if (coordinates) {
