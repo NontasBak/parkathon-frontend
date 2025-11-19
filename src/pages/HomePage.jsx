@@ -6,6 +6,7 @@ import SearchBar from "../components/SearchBar";
 import FrequentLocationBar from "../components/FrequentLocationBar";
 import Toast from "../components/Toast";
 import { useParkingContext } from "../context/ParkingContext";
+import { setDestination as setDestinationAPI } from "../api/destination";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -42,9 +43,37 @@ export default function HomePage() {
     navigate("/profile");
   };
 
-  const handleLocationClick = (locationId) => {
-    console.log("Location clicked:", locationId);
-    // TODO: Implement location navigation
+  const handleLocationClick = async (location) => {
+    console.log("Location clicked:", location);
+
+    // If it's the "nearby" location, handle differently
+    if (location.id === "nearby") {
+      // TODO: Implement nearby search functionality
+      console.log("Searching for nearby parking");
+      return;
+    }
+
+    // For frequent locations, set as destination via API
+    if (location.address) {
+      try {
+        // Call the API to set the destination on the backend
+        // This will trigger the ParkingContext to fetch parking spots
+        const response = await setDestinationAPI(location.address, location.coordinates);
+
+        console.log("Destination set via API:", response);
+
+        // Update local state with the destination from API response
+        if (response && response.destination) {
+          setDestination(response.destination);
+          setToastMessage(`Destination set to ${location.label}`);
+          setShowToast(true);
+        }
+      } catch (err) {
+        console.error("Failed to set destination:", err);
+        setToastMessage("Failed to set destination");
+        setShowToast(true);
+      }
+    }
   };
 
   const handleSearchError = (errorMessage) => {
