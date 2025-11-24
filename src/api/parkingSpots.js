@@ -50,13 +50,20 @@ export const getParkingSpotColor = (availability) => {
 };
 
 /**
- * Get parking spot marker icon URL based on availability
+ * Get parking spot marker icon URL based on availability and accessibility
  * @param {number} availability - Availability number between 0-1
+ * @param {boolean} accessibility - Whether the spot is accessible
  * @returns {string} URL for the marker icon
  */
-export const getParkingSpotIconUrl = (availability) => {
+export const getParkingSpotIconUrl = (availability, accessibility = false) => {
   const color = getParkingSpotColor(availability);
-  return `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`;
+
+  // Use accessible icons if the spot has accessibility flag
+  if (accessibility) {
+    return `/assets/marker-icon-accessible-${color}.png`;
+  }
+
+  return `/assets/marker-icon-2x-${color}.png`;
 };
 
 const parkingSpotsService = {
