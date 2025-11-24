@@ -30,10 +30,11 @@ function Map({ currentLocation, cameraLocation, marker, parkingLocations, destin
   // Debug logging
   console.log("Map component - destination prop:", destination);
 
-  // Determine camera center: prioritize destination, then markerLocation, then initial
-  const centerLocation = destination
-    ? { lat: destination.coordinates.latitude, lng: destination.coordinates.longitude }
-    : markerLocation || initialCenter;
+  // Determine camera center: prioritize destination (if has coordinates), then markerLocation, then initial
+  const centerLocation =
+    destination && destination.coordinates
+      ? { lat: destination.coordinates.latitude, lng: destination.coordinates.longitude }
+      : markerLocation || initialCenter;
 
   console.log("Map component - centerLocation:", centerLocation);
 

@@ -24,13 +24,14 @@ export function ParkingProvider({ children }) {
   // Fetch parking spots when destination is set
   useEffect(() => {
     const fetchParkingSpots = async () => {
-      if (destination && destination.coordinates) {
+      if (destination && destination.address) {
         setLoadingSpots(true);
         try {
           // Fetch parking spots with default radius of 100m
+          // The API uses the backend-stored destination coordinates
           const spots = await getParkingSpots(undefined, 100, false);
           setParkingSpots(spots);
-          console.log("Fetched parking spots:", spots);
+          console.log("Fetched parking spots for destination:", destination.address, spots);
         } catch (error) {
           console.error("Failed to fetch parking spots:", error);
           setParkingSpots(null);

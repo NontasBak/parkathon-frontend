@@ -28,15 +28,19 @@ const getMockCoordinates = () => {
  */
 export const setDestination = async (address, coordinates = null) => {
   try {
-    // Always use mock coordinates for Egnatia 125
-    // const destinationCoordinates = getMockCoordinates();
+    const requestBody = {};
 
-    const requestBody = {
-      address: address,
-      // coordinates: destinationCoordinates,
-    };
+    // Add address if provided
+    if (address) {
+      requestBody.address = address;
+    }
 
-    const response = await apiClient.put(`/users/${MOCK_USER_ID}/destination`, requestBody);
+    // Add coordinates if provided
+    if (coordinates) {
+      requestBody.coordinates = coordinates;
+    }
+
+    const response = await apiClient.put(`/user/${MOCK_USER_ID}/destination`, requestBody);
 
     // API returns { success, message, data: { destination: {...} } }
     return response.data.data;
@@ -59,7 +63,7 @@ export const setDestinationFromCurrentLocation = async (coordinates) => {
       coordinates: getMockCoordinates(),
     };
 
-    const response = await apiClient.put(`/users/${MOCK_USER_ID}/destination`, requestBody);
+    const response = await apiClient.put(`/user/${MOCK_USER_ID}/destination`, requestBody);
 
     // API returns { success, message, data: { destination: {...} } }
     return response.data.data;
@@ -83,7 +87,7 @@ export const setDestinationFromFrequentLocation = async (address, coordinates) =
       coordinates: getMockCoordinates(),
     };
 
-    const response = await apiClient.put(`/users/${MOCK_USER_ID}/destination`, requestBody);
+    const response = await apiClient.put(`/user/${MOCK_USER_ID}/destination`, requestBody);
 
     // API returns { success, message, data: { destination: {...} } }
     return response.data.data;

@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
  * @param {number} duration - Auto-dismiss duration in milliseconds (default: 3000)
  * @param {string} type - Toast type: 'error', 'success', 'info' (default: 'error')
  */
-const Toast = ({ message, isVisible, onClose, duration = 3000, type = "error" }) => {
+const Toast = ({ message, isVisible, onClose, duration = 3000 }) => {
   const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {

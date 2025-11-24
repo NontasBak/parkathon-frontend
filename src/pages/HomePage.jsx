@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import Map from "../components/Map";
 import ParkButton from "../components/ParkButton";
 import SearchBar from "../components/SearchBar";
 import FrequentLocationBar from "../components/FrequentLocationBar";
 import Toast from "../components/Toast";
 import { useParkingContext } from "../context/ParkingContext";
+import { setDestination as setDestinationAPI } from "../api/destination";
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const {
     currentLocation,
     cameraLocation,
@@ -37,13 +40,63 @@ export default function HomePage() {
   };
 
   const handleProfileClick = () => {
-    console.log("Profile clicked");
-    // TODO: Implement profile navigation
+    navigate("/profile");
   };
 
-  const handleLocationClick = (locationId) => {
-    console.log("Location clicked:", locationId);
-    // TODO: Implement location navigation
+  const handleLocationClick = async (location) => {
+    console.log("Location clicked:", location);
+
+    // If it's the "nearby" location, set destination with coordinates only
+    if (location.id === "nearby") {
+      try {
+        console.log("Searching for nearby parking");
+
+        // Mock coordinates for Egnatia 125, Thessaloniki
+        const mockCoordinates = {
+          latitude: 40.63298,
+          longitude: 22.94762,
+        };
+
+        // Call the API with coordinates only (no address)
+        const response = await setDestinationAPI(null, mockCoordinates);
+
+        console.log("Nearby destination set via API:", response);
+
+        // Update local state with the destination from API response
+        if (response && response.destination) {
+          setDestination(response.destination);
+          setToastMessage("Displaying nearby parking spots");
+          setShowToast(true);
+        }
+      } catch (err) {
+        console.error("Failed to set nearby destination:", err);
+        setToastMessage("Failed to search nearby");
+        setShowToast(true);
+      }
+      return;
+    }
+
+    // For frequent locations, set as destination via API
+    if (location.address) {
+      try {
+        // Call the API to set the destination on the backend
+        // This will trigger the ParkingContext to fetch parking spots
+        const response = await setDestinationAPI(location.address, location.coordinates);
+
+        console.log("Destination set via API:", response);
+
+        // Update local state with the destination from API response
+        if (response && response.destination) {
+          setDestination(response.destination);
+          setToastMessage(`Destination set to ${location.label}`);
+          setShowToast(true);
+        }
+      } catch (err) {
+        console.error("Failed to set destination:", err);
+        setToastMessage("Failed to set destination");
+        setShowToast(true);
+      }
+    }
   };
 
   const handleSearchError = (errorMessage) => {
@@ -53,6 +106,11 @@ export default function HomePage() {
 
   const handleToastClose = () => {
     setShowToast(false);
+  };
+
+  const handleShowToast = (message) => {
+    setToastMessage(message);
+    setShowToast(true);
   };
 
   return (
@@ -83,16 +141,10 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      <ParkButton />
+      <ParkButton onShowToast={handleShowToast} />
 
       {/* Toast notification */}
-      <Toast
-        message={toastMessage}
-        isVisible={showToast}
-        onClose={handleToastClose}
-        duration={3000}
-        type="error"
-      />
+      <Toast message={toastMessage} isVisible={showToast} onClose={handleToastClose} duration={3000} />
     </div>
   );
 }
