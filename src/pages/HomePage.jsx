@@ -5,6 +5,7 @@ import ParkButton from "../components/ParkButton";
 import SearchBar from "../components/SearchBar";
 import FrequentLocationBar from "../components/FrequentLocationBar";
 import Toast from "../components/Toast";
+import EditRadius from "../components/EditRadius";
 import { useParkingContext } from "../context/ParkingContext";
 import { setDestination as setDestinationAPI } from "../api/destination";
 
@@ -18,6 +19,8 @@ export default function HomePage() {
     destination,
     setDestination,
     parkingSpots,
+    searchRadius,
+    updateSearchRadius,
   } = useParkingContext();
 
   const [toastMessage, setToastMessage] = useState("");
@@ -138,6 +141,18 @@ export default function HomePage() {
               onError={handleSearchError}
             />
             <FrequentLocationBar onLocationClick={handleLocationClick} />
+          </div>
+        </div>
+
+        {/* EditRadius button positioned in bottom-right corner */}
+        <div className="absolute bottom-6 right-6 z-[1000] pointer-events-none">
+          <div className="pointer-events-auto">
+            <EditRadius
+              currentRadius={searchRadius}
+              onRadiusChange={updateSearchRadius}
+              minRadius={10}
+              maxRadius={1000}
+            />
           </div>
         </div>
       </div>
