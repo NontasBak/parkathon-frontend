@@ -12,6 +12,9 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
+// Shadow URL for all custom markers
+const MARKER_SHADOW_URL = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png";
+
 // Custom component to handle map center updates
 function MapUpdater({ center }) {
   const map = useMap();
@@ -39,33 +42,31 @@ function Map({ currentLocation, cameraLocation, marker, parkingLocations, destin
   console.log("Map component - centerLocation:", centerLocation);
 
   const parkingIcon = new L.Icon({
-    iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+    iconUrl: "/assets/marker-icon-2x-green.png",
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
-    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+    shadowUrl: MARKER_SHADOW_URL,
     shadowSize: [41, 41],
   });
 
   const destinationIcon = new L.Icon({
-    iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
+    iconUrl: "/assets/marker-icon-2x-blue.png",
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
-    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+    shadowUrl: MARKER_SHADOW_URL,
     shadowSize: [41, 41],
   });
 
-  // Helper function to create a parking spot icon based on availability
-  const createParkingSpotIcon = (availability) => {
+  // Helper function to create a parking spot icon based on availability and accessibility
+  const createParkingSpotIcon = (availability, accessibility = false) => {
     return new L.Icon({
-      iconUrl: getParkingSpotIconUrl(availability),
+      iconUrl: getParkingSpotIconUrl(availability, accessibility),
       iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
-      shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+      shadowUrl: MARKER_SHADOW_URL,
       shadowSize: [41, 41],
     });
   };
@@ -97,13 +98,13 @@ function Map({ currentLocation, cameraLocation, marker, parkingLocations, destin
           <Marker key={index} position={location} icon={parkingIcon} />
         ))}
 
-      {/* Parking spots with color-coded markers based on availability */}
+      {/* Parking spots with color-coded markers based on availability and accessibility */}
       {parkingSpots &&
         parkingSpots.map((spot) => (
           <Marker
             key={spot.spot_id}
             position={{ lat: spot.coordinates.latitude, lng: spot.coordinates.longitude }}
-            icon={createParkingSpotIcon(spot.availability)}
+            icon={createParkingSpotIcon(spot.availability, spot.accessibility)}
           />
         ))}
     </MapContainer>
