@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import Map from "../components/Map";
 import ParkButton from "../components/ParkButton";
@@ -21,10 +21,19 @@ export default function HomePage() {
     parkingSpots,
     searchRadius,
     updateSearchRadius,
+    refetchParkingSpots,
   } = useParkingContext();
 
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
+
+  // Refetch parking spots when returning to the homepage
+  useEffect(() => {
+    if (destination && destination.address) {
+      refetchParkingSpots();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSearch = (searchText, destination) => {
     console.log("Searching for:", searchText);
