@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import Map from "../components/Map";
 import ParkButton from "../components/ParkButton";
 import SearchBar from "../components/SearchBar";
 import FrequentLocationBar from "../components/FrequentLocationBar";
 import Toast from "../components/Toast";
+import EditRadius from "../components/EditRadius";
 import { useParkingContext } from "../context/ParkingContext";
 import { setDestination as setDestinationAPI } from "../api/destination";
 
@@ -18,10 +19,21 @@ export default function HomePage() {
     destination,
     setDestination,
     parkingSpots,
+    searchRadius,
+    updateSearchRadius,
+    refetchParkingSpots,
   } = useParkingContext();
 
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
+
+  // Refetch parking spots when returning to the homepage
+  useEffect(() => {
+    if (destination && destination.address) {
+      refetchParkingSpots();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSearch = (searchText, destination) => {
     console.log("Searching for:", searchText);
@@ -138,6 +150,18 @@ export default function HomePage() {
               onError={handleSearchError}
             />
             <FrequentLocationBar onLocationClick={handleLocationClick} />
+          </div>
+        </div>
+
+        {/* EditRadius button positioned in bottom-right corner */}
+        <div className="absolute bottom-6 right-6 z-[1000] pointer-events-none">
+          <div className="pointer-events-auto">
+            <EditRadius
+              currentRadius={searchRadius}
+              onRadiusChange={updateSearchRadius}
+              minRadius={10}
+              maxRadius={1000}
+            />
           </div>
         </div>
       </div>
