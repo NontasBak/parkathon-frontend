@@ -15,11 +15,10 @@ export const MOCK_USER_ID = "a1b2c3d4-e5f6-7890-1234-567890abcdef";
  * @param {boolean} accessibility - Filter only accessible spots (defaults to false)
  * @returns {Promise} API response with parking spots array
  */
-export const getParkingSpots = async (userId = MOCK_USER_ID, radius = 10000, accessibility = false) => {
+export const getParkingSpots = async (userId = MOCK_USER_ID, radius = 10000) => {
   try {
     const params = {
       radius,
-      accessibility,
     };
 
     const response = await apiClient.get(`/user/${userId}/destination/parking-spot`, { params });
