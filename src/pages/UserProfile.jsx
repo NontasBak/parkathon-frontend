@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router";
 import ProfileSectionDropdown from "../components/DropdownLists";
 import CarsDropdown from "../components/CarsDropdown";
 import FrequentLocationsDropdown from "../components/FrequentLocationsDropdown";
+import AccessibilityDropdown from "../components/AccessibilityDropdown";
 import { getUser } from "../api/user";
 import { getCars } from "../api/cars";
 import { getFrequentLocations } from "../api/frequentLocations";
@@ -154,13 +155,11 @@ export default function UserProfile() {
           <p className="text-sm text-gray-600">Security settings functionality coming soon.</p>
         </ProfileSectionDropdown>
 
-        <ProfileSectionDropdown
-          title="Accessibility"
+        <AccessibilityDropdown
           isOpen={expandedSection === "accessibility"}
           onToggle={() => toggleSection("accessibility")}
-        >
-          <p className="text-sm text-gray-600">Accessibility functionality coming soon.</p>
-        </ProfileSectionDropdown>
+          userId={userId}
+        />
 
         {/* Log Out Button */}
         <div className="flex justify-center pt-4">

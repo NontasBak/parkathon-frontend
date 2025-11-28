@@ -23,6 +23,7 @@ export function ParkingProvider({ children }) {
   const [destination, setDestination] = useState(null); // Destination with address and coordinates
   const [parkingSpots, setParkingSpots] = useState(null); // Parking spots near destination
   const [loadingSpots, setLoadingSpots] = useState(false); // Loading state for parking spots
+  const [refetchTrigger, setRefetchTrigger] = useState(0); // Trigger to force refetch
 
   // Load user's search radius from backend on mount
   useEffect(() => {
@@ -74,7 +75,7 @@ export function ParkingProvider({ children }) {
 
     fetchParkingSpots();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [destination, searchRadius]);  // You can add computed values or helper functions here
+  }, [destination, searchRadius, refetchTrigger]);  // You can add computed values or helper functions here
   const clearSearch = () => {
     setMarker(null);
     setParkingLocations(null);
@@ -86,6 +87,11 @@ export function ParkingProvider({ children }) {
   const updateSearchRadius = (newRadius) => {
     setSearchRadius(newRadius);
     console.log("Temporarily set search radius to:", newRadius);
+  };
+
+  // Refetch parking spots (useful after accessibility changes)
+  const refetchParkingSpots = () => {
+    setRefetchTrigger(prev => prev + 1);
   };
 
   const value = {
@@ -109,6 +115,7 @@ export function ParkingProvider({ children }) {
     // Helper functions
     clearSearch,
     updateSearchRadius,
+    refetchParkingSpots,
   };
 
   return <ParkingContext.Provider value={value}>{children}</ParkingContext.Provider>;
